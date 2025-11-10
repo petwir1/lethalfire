@@ -269,7 +269,7 @@ LICH SKELETONS
 	advclass_cat_rolls = list(CTAG_LSKELETON = 20)
 	outfit = /datum/outfit/job/roguetown/greater_skeleton/lich 
 
-/datum/job/roguetown/skeletonbesieger/equip(mob/living/carbon/human/H, visualsOnly, announce, latejoin, datum/outfit/outfit_override, client/preference_source)
+/datum/job/roguetown/greater_skeleton/lich/besieger/equip(mob/living/carbon/human/H, visualsOnly, announce, latejoin, datum/outfit/outfit_override, client/preference_source)
 	. = ..()
 	return H.change_mob_type(/mob/living/carbon/human/species/skeleton/no_equipment, delete_old_mob = TRUE)
 

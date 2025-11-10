@@ -290,7 +290,7 @@
 			r_hand = /obj/item/rogueweapon/halberd/bardiche
 			H.adjust_skillrank_up_to(/datum/skill/combat/polearms, 4, TRUE)
 		if("Sword & Shield")
-			beltr = /obj/item/rogueweapon/sword/sabre
+			beltr = /obj/item/rogueweapon/sword
 			backl = /obj/item/rogueweapon/shield/wood
 			r_hand = /obj/item/rogueweapon/scabbard/sword
 			H.adjust_skillrank_up_to(/datum/skill/combat/swords, 4, TRUE)

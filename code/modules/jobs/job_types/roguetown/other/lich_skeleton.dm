@@ -260,3 +260,25 @@ LICH SKELETONS
 
 	beltr = /obj/item/rogueweapon/stoneaxe/woodcut
 	beltl = /obj/item/rogueweapon/pick/copper
+
+
+// Skeleton Job used only for the Skeleton Siege event
+//This spawn the skeletons using the stats and equipment from the fortified skeletons above. 
+/datum/job/roguetown/greater_skeleton/lich/besieger
+	title = "Besieger Skeleton"
+	advclass_cat_rolls = list(CTAG_LSKELETON = 20)
+	outfit = /datum/outfit/job/roguetown/greater_skeleton/lich 
+
+/datum/job/roguetown/skeletonbesieger/equip(mob/living/carbon/human/H, visualsOnly, announce, latejoin, datum/outfit/outfit_override, client/preference_source)
+	. = ..()
+	return H.change_mob_type(/mob/living/carbon/human/species/skeleton/no_equipment, delete_old_mob = TRUE)
+
+/datum/job/roguetown/greater_skeleton/lich/besieger/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
+	. = ..()
+	var/mob/living/carbon/human/H = L
+	H.advsetup = TRUE
+	H.invisibility = INVISIBILITY_MAXIMUM
+	H.become_blind("advsetup")
+	addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living/carbon/human, choose_name_popup), "BESIEGER SKELETON"), 3 SECONDS)
+	addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living/carbon/human, choose_pronouns_and_body)), 5 SECONDS)
+	H.mind.AddSpell(new /obj/effect/proc_holder/spell/self/suicidebomb/lesser)

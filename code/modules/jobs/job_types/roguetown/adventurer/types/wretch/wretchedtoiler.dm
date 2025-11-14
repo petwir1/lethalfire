@@ -62,7 +62,12 @@
 	//you get miracles, yay! not as peak as a dedicated miracle class, though
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_miracles(H, cleric_tier = CLERIC_T2, passive_gain = CLERIC_REGEN_DEVOTEE, devotion_limit = CLERIC_REQ_2)
-
+	//give minion orders if they're a zizite
+	if (istype (H.patron, /datum/patron/inhumen/zizo))
+		if(H.mind)
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/minion_order)
+			H.mind.AddSpell(new /obj/effect/proc_holder/spell/invoked/gravemark)
+			H.mind.current.faction += "[H.name]_faction"
 	var/classes = list("MALICIOUS Mastermind","SNIVELLING servant")
 	var/classchoice = input("Choose your archetypes", "Available archetypes") as anything in classes
 	switch(classchoice)

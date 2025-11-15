@@ -247,6 +247,8 @@
 			else
 				if(used_weapon)
 					defender_skill = H.get_skill_level(used_weapon.associated_skill)
+					if(used_weapon.item_flags & PEASANT_WEAPON && HAS_TRAIT(H, TRAIT_PEASANTMILITIA))
+						prob2defend += 20 //Identical to +1 defender skill
 				else
 					defender_skill = H.get_skill_level(/datum/skill/combat/unarmed)
 				prob2defend += highest_defense
@@ -269,6 +271,8 @@
 						if(mind)
 							finalmod = clamp(spdmod, 0, 30)
 						prob2defend -= finalmod
+					if(intenty.masteritem.item_flags & PEASANT_WEAPON && HAS_TRAIT(U, TRAIT_PEASANTMILITIA))
+						prob2defend -= 20 //Identical to +1 attacker skill
 				else
 					attacker_skill = U.get_skill_level(/datum/skill/combat/unarmed)
 					prob2defend -= (attacker_skill * 20)
@@ -294,11 +298,6 @@
 					var/mob/living/carbon/human/SH = H
 					var/sentinel = SH.calculate_sentinel_bonus()
 					prob2defend += sentinel
-
-			if(used_weapon.item_flags & PEASANT_WEAPON && HAS_TRAIT(H, TRAIT_PEASANTMILITIA))
-				prob2defend += 20 //Identical to +1 defender skill
-			if(intenty.masteritem && intenty.masteritem.item_flags & PEASANT_WEAPON && HAS_TRAIT(U, TRAIT_PEASANTMILITIA))
-				prob2defend -= 20 //Identical to +1 attacker skill
 
 			if(HAS_TRAIT(H, TRAIT_CURSE_RAVOX))
 				prob2defend -= 30

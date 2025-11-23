@@ -73779,6 +73779,7 @@
 /area/rogue/outdoors/bog)
 "tzF" = (
 /obj/structure/fermentation_keg/water,
+/obj/structure/roguemachine/atm,
 /turf/open/floor/rogue/hexstone,
 /area/rogue/indoors/town/dwarfin)
 "tzG" = (

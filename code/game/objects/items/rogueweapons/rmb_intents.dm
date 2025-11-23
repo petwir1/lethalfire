@@ -3,6 +3,8 @@
 	var/desc = ""
 	var/icon_state = ""
 	var/adjacency = TRUE
+	/// Whether the rclick will try to get turfs as target.
+	var/prioritize_turfs = FALSE
 
 /mob/living/carbon/human
 	var/bait_stacks
@@ -10,6 +12,9 @@
 /mob/living/carbon/human/on_cmode()
 	if(!cmode)	//We just toggled it off.
 		addtimer(CALLBACK(src, PROC_REF(purge_bait)), 30 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
+		addtimer(CALLBACK(src, PROC_REF(expire_peel)), 60 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)
+	if(!HAS_TRAIT(src, TRAIT_DECEIVING_MEEKNESS))
+		filtered_balloon_alert(TRAIT_COMBAT_AWARE, (cmode ? ("<i><font color = '#831414'>Tense</font></i>") : ("<i><font color = '#c7c6c6'>Relaxed</font></i>")), y_offset = 32)
 
 /mob/living/carbon/human/RightClickOn(atom/A, params)
 	if(rmb_intent && !rmb_intent.adjacency && !istype(A, /obj/item/clothing) && cmode && !istype(src, /mob/living/carbon/human/species/skeleton) && !istype(A, /obj/item/quiver) && !istype(A, /obj/item/storage))
@@ -17,9 +22,36 @@
 		if(held && istype(held, /obj/item))
 			var/obj/item/I = held
 			if(I.associated_skill)
-				rmb_intent.special_attack(src, A)
+				rmb_intent.special_attack(src, ismob(A) ? A : rmb_intent.prioritize_turfs ? get_turf(A) : get_foe_from_turf(get_turf(A)))
 	else
 		. = ..()
+
+/// Used for "directional" style rmb attacks on a turf, prioritizing standing targets
+/mob/living/proc/get_foe_from_turf(turf/T)
+	if(!istype(T))
+		return
+
+	var/list/mob/living/foes = list()
+	for(var/mob/living/foe_in_turf in T)
+		if(foe_in_turf == src)
+			continue
+
+		var/foe_prio = rand(4, 8)
+		if(foe_in_turf.mobility_flags & MOBILITY_STAND)
+			foe_prio += 10
+		else if(foe_in_turf.stat != CONSCIOUS)
+			foe_prio = 2
+		else if(foe_in_turf.surrendering)
+			foe_prio = -5
+
+		foes[foe_in_turf] = foe_prio
+
+	if(!foes.len)
+		return null
+
+	if(foes.len > 1)
+		sortTim(foes, cmp = /proc/cmp_numeric_dsc, associative = TRUE)
+	return foes[1]
 
 /datum/rmb_intent/proc/special_attack(mob/living/user, atom/target)
 	return
@@ -110,6 +142,28 @@
 	name = "strong"
 	desc = "Your attacks have +1 strength but use more stamina. Higher critrate with brutal attacks. Intentionally fails surgery steps."
 	icon_state = "rmbstrong"
+	adjacency = FALSE
+	prioritize_turfs = TRUE
+
+/datum/rmb_intent/strong/special_attack(mob/living/user, atom/target)
+	if(!user)
+		return
+	if(user.incapacitated())
+		return
+	if(!user.mind)
+		return
+	if(user.has_status_effect(/datum/status_effect/debuff/specialcd))
+		return
+
+	var/obj/item/rogueweapon/W = user.get_active_held_item()
+	if(istype(W, /obj/item/rogueweapon) && W.special)
+		var/skillreq = W.associated_skill
+		if(W.special.custom_skill)
+			skillreq = W.special.custom_skill
+		if(user.get_skill_level(skillreq) < SKILL_LEVEL_JOURNEYMAN)
+			to_chat(user, span_info("I'm not knowledgeable enough in the arts of this weapon to use this."))
+			return
+		W.special.deploy(user, W, target)
 
 /datum/rmb_intent/swift
 	name = "swift"
@@ -149,10 +203,14 @@
 	if(I)
 		if(I.associated_skill)
 			ourskill = user.get_skill_level(I.associated_skill)
+			if(I.item_flags & PEASANT_WEAPON && HAS_TRAIT(user, TRAIT_PEASANTMILITIA))
+				ourskill += 1
 		if(L.mind)
 			I = L.get_active_held_item()
 			if(I?.associated_skill)
 				theirskill = L.get_skill_level(I.associated_skill)
+				if(I.item_flags & PEASANT_WEAPON && HAS_TRAIT(L, TRAIT_PEASANTMILITIA))
+					theirskill += 1
 	perc += (ourskill - theirskill)*15 	//skill is of the essence
 	perc += (user.STAINT - L.STAINT)*10	//but it's also mostly a mindgame
 	skill_factor = (ourskill - theirskill)/2

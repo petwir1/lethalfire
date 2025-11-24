@@ -1935,10 +1935,10 @@
 
 /obj/item/clothing/head/roguetown/witchhat
 	name = "witch hat"
-	desc = ""
+	desc = "A wide brimmed hat that smells faintly of herbs, and viscera."
 	icon_state = "witch"
-	item_state = "witch"
-	icon = 'icons/roguetown/clothing/head.dmi'
+	detail_tag = "_detail"
+	color = COLOR_ALMOST_BLACK
 	sewrepair = TRUE
 
 /obj/item/clothing/head/roguetown/archercap

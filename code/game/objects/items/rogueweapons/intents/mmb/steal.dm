@@ -15,8 +15,17 @@
 		var/mob/living/carbon/human/target_human = target
 
 		var/thiefskill = user.get_skill_level(/datum/skill/misc/stealing) + (has_world_trait(/datum/world_trait/matthios_fingers) ? 1 : 0)
-		var/stealroll = roll("[thiefskill]d6")
+		var/initialstealroll = roll("d6") + thiefskill + (user.STASPD / 2)
+		var/advantageroll = 0
 		var/targetperception = (target_human.STAPER)
+
+		if(target_human.cmode)
+			targetperception += 1 // Target is alert
+
+		if(HAS_TRAIT(user, TRAIT_CULTIC_THIEF)) // Matthios blesses his devout with rolling advantage on thieving checks.
+			advantageroll = roll("d6") + thiefskill + (user.STASPD / 2)
+		
+		var/stealroll = MAX(initialstealroll, advantageroll)
 
 		var/list/stealablezones = list("chest", "neck", "groin", "r_hand", "l_hand")
 		var/list/stealpos = list()
@@ -29,11 +38,9 @@
 		if(do_after(user, 5, target = target_human, progress = 0))
 			if(stealroll > targetperception)
 				//TODO add exp here
-				// RATWOOD MODULAR START
-				if(target_human.cmode)
-					to_chat(user, "<span class='warning'>[target_human] is alert. I can't pickpocket them like this.</span>")
-					return
-				// RATWOOD MODULAR END
+
+				if(initialstealroll < targetperception)
+					to_chat(user, span_green("Matthios tips fate in my favor..."))
 
 				if(user_human.get_active_held_item())
 					to_chat(user, span_warning("I can't pickpocket while my hand is full!"))

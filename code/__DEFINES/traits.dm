@@ -52,6 +52,7 @@
 #define TRAIT_SQUIRE_REPAIR "Squire Knowledge"
 #define TRAIT_TRAINED_SMITH "Trained Smith"
 #define TRAIT_GUARDSMAN "Vigilant Guardsman"
+#define TRAIT_GUARDSMAN_NOBLE "Noble Guardsman"
 #define TRAIT_TAVERN_FIGHTER "Tavern Fighter"
 #define TRAIT_WOODSMAN "Talented Woodsman"
 #define TRAIT_LAMIAN_TAIL "Lamian Tail"
@@ -233,7 +234,8 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_OUTLAW = span_info("This land's meisters and castificos reject my touch."),
 	TRAIT_LEPROSY = span_necrosis("I'm a disgusting leper..."),
 	TRAIT_TAVERN_FIGHTER = span_info("I am vigilant in my duties. The Tavern is my home, none shall dare oppose me or skip out on payment."),
-	TRAIT_GUARDSMAN = span_info("I am vigilant in my duties. In the town Scarlet Reach, my abilities are sharper due to my routine and familiarity."),
+	TRAIT_GUARDSMAN = span_info("I am vigilant in my duties. In the town of Scarlet Reach, my abilities are sharper due to my routine and familiarity."),
+	TRAIT_GUARDSMAN_NOBLE = span_info ("I am vigilant in my duties. In the Keep of Scarlet Reach, my abilities are sharper due to my routine and familiarity."),
 	TRAIT_WOODSMAN = span_info("I am vigilant in my duties. In the grove and coast of Scarlet Reach, my abilities are sharper due to my routine and familiarity."),
 	TRAIT_DEATHBARGAIN = span_info("A horrible deal has been prepared in your name. May you never see it fulfilled..."),
 	TRAIT_RITUALIST = span_info("I am skilled in the holy arts. Using ritual chalk, I can more deftly channel my God's powers via runes."),
@@ -271,6 +273,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 	TRAIT_CYCLOPS_LEFT = span_warning("My left eye has been poked out..."),
 	TRAIT_CYCLOPS_RIGHT = span_warning("My right eye has been poked out..."),
 	TRAIT_LEECHIMMUNE = "Leeches are reluctant to bite me.",
+	TRAIT_BITERHELM = "Whether through design or symbiosis, I can now bite into others while wearing a visored helmet.",
 	TRAIT_INHUMEN_ANATOMY = "My anatomy is inhumen, preventing me from wearing hats and shoes.",
 	TRAIT_NASTY_EATER = span_dead("I can eat bad food, and water that would be toxic to humen will not affect me."),
 	TRAIT_WILD_EATER = span_info("I can eat raw food and drink from dirty water."),
@@ -418,6 +421,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 			_L = target.status_traits; \
 			_L[trait] = list(source); \
 			SEND_SIGNAL(target, SIGNAL_ADDTRAIT(trait), trait); \
+			SEND_GLOBAL_SIGNAL(COMSIG_ATOM_ADD_TRAIT, target, trait); \
 		} else { \
 			_L = target.status_traits; \
 			if (_L[trait]) { \
@@ -425,6 +429,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 			} else { \
 				_L[trait] = list(source); \
 				SEND_SIGNAL(target, SIGNAL_ADDTRAIT(trait), trait); \
+				SEND_GLOBAL_SIGNAL(COMSIG_ATOM_ADD_TRAIT, target, trait); \
 			}; \
 		} \
 	} while (0)
@@ -462,6 +467,7 @@ GLOBAL_LIST_INIT(roguetraits, list(
 				if (!length(_L[_T])) { \
 					_L -= _T; \
 					SEND_SIGNAL(target, SIGNAL_REMOVETRAIT(_T), _T); \
+					SEND_GLOBAL_SIGNAL(COMSIG_ATOM_REMOVE_TRAIT, target, trait); \
 				}; \
 			};\
 			if (!length(_L)) { \
@@ -589,7 +595,12 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_BURIED_COIN_GIVEN "buried_coin_given" // prevents a human corpse from being used for a corpse multiple times
 #define TRAIT_BLOODLOSS_IMMUNE "bloodloss_immune" // can bleed, but will never die from blood loss
 #define TRAIT_NO_BITE "no_bite" //prevents biting
+#define TRAIT_BITERHELM "Helmetbiter" // just use this to get helmets which are bitey.
 #define TRAIT_LEGENDARY_ALCHEMIST		"Expert Herb Finder"
+/// Used to track if a player has rejected vampire convert
+#define TRAIT_REFUSED_VAMP_CONVERT "refused_vampire_conversion"
+/// makes your footsteps completely silent
+#define TRAIT_SILENT_FOOTSTEPS "silent_footsteps"
 
 //bodypart traits
 #define TRAIT_PARALYSIS	"paralysis" //Used for limb-based paralysis and full body paralysis
@@ -749,5 +760,17 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_AREA_SENSITIVE "area-sensitive"
 ///every hearing sensitive atom has this trait
 #define TRAIT_HEARING_SENSITIVE "hearing_sensitive"
+
+#define TRAIT_CLAN_LEADER "clan_leader"
+#define TRAIT_IN_FRENZY "in_frenzy"
+#define TRAIT_VIOLATOR "Violator of the Coven"
+#define TRAIT_TORPOR "Endless Slumber"
+/// Trait given as a result of vampiric activities
+#define VAMPIRE_TRAIT "vampire"
+#define TABOO_TRAIT "taboo"
+#define TRAIT_COVEN_BANE "coven_bane"
+#define TRAIT_COVEN_RESISTANT "coven_resistance"
+#define TRAIT_MOVEMENT_BLOCKED "movement_blocked"
 /// Mobs that have this trait cannot be extinguished
 #define TRAIT_NO_EXTINGUISH "no_extinguish"
+

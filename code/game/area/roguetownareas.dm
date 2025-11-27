@@ -33,6 +33,18 @@ GLOBAL_LIST_INIT(roguetown_areas_typecache, typecacheof(/area/rogue/indoors/town
 /area/rogue/Entered(mob/living/carbon/human/guy)
 
 	. = ..()
+	if((src.keep_area == TRUE) && HAS_TRAIT(guy, TRAIT_GUARDSMAN_NOBLE) && !guy.has_status_effect(/datum/status_effect/buff/knightbuff)) //knights
+		guy.apply_status_effect(/datum/status_effect/buff/knightbuff)
+
+/area/rogue/Entered(mob/living/carbon/human/guy)
+
+	. = ..()
+	if((src.town_area == TRUE) && HAS_TRAIT(guy, TRAIT_GUARDSMAN_NOBLE) && !guy.has_status_effect(/datum/status_effect/buff/knightbufftown)) //knights
+		guy.apply_status_effect(/datum/status_effect/buff/knightbufftown)
+
+/area/rogue/Entered(mob/living/carbon/human/guy)
+
+	. = ..()
 	if((src.tavern_area == TRUE) && HAS_TRAIT(guy, TRAIT_TAVERN_FIGHTER) && !guy.has_status_effect(/datum/status_effect/buff/barkeepbuff)) // THE FIGHTER
 		guy.apply_status_effect(/datum/status_effect/buff/barkeepbuff)
 
@@ -87,6 +99,10 @@ GLOBAL_LIST_INIT(roguetown_areas_typecache, typecacheof(/area/rogue/indoors/town
 	droning_sound = 'sound/music/area/banditcamp.ogg'
 	droning_sound_dusk = 'sound/music/area/banditcamp.ogg'
 	droning_sound_night = 'sound/music/area/banditcamp.ogg'
+
+/area/rogue/indoors/vampire_manor
+	name = "Vampire Manor"
+	droning_sound = 'sound/music/area/manor2.ogg'
 
 /area/rogue/indoors/cave
 	name = "latejoin cave"

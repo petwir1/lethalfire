@@ -395,3 +395,8 @@
 	stressadd = 6
 	desc = span_boldred("AAAGGHHH!! MY PRECIOUS WINGS!!")
 	timer = 40 MINUTES
+
+/datum/stressevent/vampiric_reality
+	stressadd = 3
+	desc = span_boldred("The holy sun returns, it's only a matter of time until I turn to ash. I wish to be Mortal again.")
+	timer = 30 SECONDS

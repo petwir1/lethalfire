@@ -578,17 +578,6 @@
 		owner.remove_status_effect(/datum/status_effect/debuff/sensitivity)
 		owner.remove_stress(/datum/stressevent/sensitivity)
 
-/datum/status_effect/debuff/sunspurn
-	id = "Sunspurn"
-	alert_type =  /atom/movable/screen/alert/status_effect/debuff/sunspurn
-	effectedstats = list("strength" = -2, "endurance" = -3, "constitution" = -3)
-	duration = 1 MINUTES
-
-/atom/movable/screen/alert/status_effect/debuff/sunspurn
-	name = "Sunspurned"
-	desc = "Astrata spurns me! I feel so weak..."
-	icon_state = "muscles"
-
 ///////////////////////
 /// CLIMBING STUFF ///
 /////////////////////
@@ -655,6 +644,17 @@
 	name = "Climbing..."
 	desc = ""
 	icon_state = "muscles"
+
+/datum/status_effect/debuff/mesmerised
+	id = "mesmerised"
+	alert_type = /atom/movable/screen/alert/status_effect/debuff/mesmerised
+	effectedstats = list(STATKEY_STR = -2, STATKEY_LCK = -2, STATKEY_PER = -2, STATKEY_SPD = -2)
+	duration = 30 SECONDS
+
+/atom/movable/screen/alert/status_effect/debuff/mesmerised
+	name = "Mesmerised"
+	desc = span_warning("Their beauty is otherwordly..")
+	icon_state = "acid"
 
 /////////////////////////
 ///HARPY FLIGHT STUFF///

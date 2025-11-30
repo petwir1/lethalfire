@@ -53,6 +53,9 @@ GLOBAL_LIST_EMPTY(lord_titles)
 /datum/job/roguetown/lord/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
 	. = ..()
 	if(L)
+		var/mob/living/carbon/human/H = L
+		if(istype(H))
+			H.verbs |= list(/mob/living/carbon/human/proc/disgrace_knight, /mob/living/carbon/human/proc/fire_guard)
 		var/list/chopped_name = splittext(L.real_name, " ")
 		if(length(chopped_name) > 1)
 			chopped_name -= chopped_name[1]

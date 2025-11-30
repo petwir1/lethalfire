@@ -3,6 +3,7 @@
 	flag = BUTLER
 	department_flag = COURTIERS
 	faction = "Station"
+	advjob_examine = TRUE
 	total_positions = 1
 	spawn_positions = 1
 	allowed_races = RACES_SECOND_CLASS_NO_GOLEM

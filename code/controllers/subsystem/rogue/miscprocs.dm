@@ -51,6 +51,8 @@
 	src.holder = holder
 	holder?.devotion = src
 	src.patron = patron
+	holder?.hud_used?.initialize_bloodpool()
+	holder?.hud_used?.bloodpool.set_fill_color("#3C41A4")
 	if (patron.type == /datum/patron/inhumen/zizo || patron.type == /datum/patron/divine/necra)
 		ADD_TRAIT(holder, TRAIT_DEATHSIGHT, "devotion")
 
@@ -58,6 +60,7 @@
 	. = ..()
 	if (patron.type == /datum/patron/inhumen/zizo || patron.type == /datum/patron/divine/necra)
 		REMOVE_TRAIT(holder, TRAIT_DEATHSIGHT, "devotion")
+	holder?.hud_used?.shutdown_bloodpool()
 	holder?.devotion = null
 	holder = null
 	patron = null
@@ -79,6 +82,12 @@
 
 /datum/devotion/proc/update_devotion(dev_amt, prog_amt, silent = FALSE)
 	devotion = clamp(devotion + dev_amt, 0, max_devotion)
+	holder?.hud_used?.bloodpool?.name = "Devotion: [devotion]"
+	holder?.hud_used?.bloodpool?.desc = "Devotion: [devotion]/[max_devotion]"
+	if(devotion <= 0)
+		holder?.hud_used?.bloodpool?.set_value(0, 1 SECONDS)
+	else
+		holder?.hud_used?.bloodpool?.set_value((100 / (max_devotion / devotion)) / 100, 1 SECONDS)
 	//Max devotion limit
 	if((devotion >= max_devotion) && !silent)
 		to_chat(holder, span_warning("I have reached the limit of my devotion..."))
@@ -249,6 +258,16 @@
 		add_client_colour(/datum/client_colour/monochrome)
 	else
 		remove_client_colour(/datum/client_colour/monochrome)
+
+/mob/living/carbon/human/proc/togglecombatawareness()
+	set name = "Toggle Combat Awareness"
+	set category = "Virtue"
+
+	if(HAS_TRAIT(src, TRAIT_COMBAT_AWARE))
+		REMOVE_TRAIT(src, TRAIT_COMBAT_AWARE, TRAIT_VIRTUE) 
+	else
+		ADD_TRAIT(src, TRAIT_COMBAT_AWARE, TRAIT_VIRTUE)
+	to_chat(src, "I will see [HAS_TRAIT(src, TRAIT_COMBAT_AWARE) ? "more" : "less"] combat information now.")
 
 /datum/devotion/proc/excommunicate(mob/living/carbon/human/H)
     if (!devotion)

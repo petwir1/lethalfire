@@ -33448,6 +33448,10 @@
 	},
 /turf/open/floor/rogue/wood/nosmooth,
 /area/rogue/under/underdark)
+"iUj" = (
+/obj/structure/roguemachine/duoface,
+/turf/closed/wall/mineral/rogue/stone,
+/area/rogue/outdoors/beach)
 "iUr" = (
 /obj/structure/flora/ausbushes/ppflowers,
 /obj/structure/flora/roguegrass,
@@ -56789,7 +56793,9 @@
 /turf/open/floor/rogue/blocks,
 /area/rogue/under/town/basement)
 "pfi" = (
-/obj/structure/roguemachine/mail/r,
+/obj/structure/roguemachine/mail/r{
+	mailtag = "Hand's Chambers"
+	},
 /turf/open/floor/rogue/ruinedwood{
 	icon_state = "weird1"
 	},
@@ -60699,8 +60705,6 @@
 /obj/structure/rack/rogue/shelf/biggest,
 /obj/item/clothing/suit/roguetown/shirt/robe/eora,
 /obj/item/clothing/suit/roguetown/shirt/robe/eora,
-/obj/item/clothing/head/roguetown/eoramask,
-/obj/item/clothing/head/roguetown/eoramask,
 /obj/machinery/light/rogue/wallfire/candle/l,
 /turf/open/floor/rogue/concrete,
 /area/rogue/indoors/town/church/chapel)
@@ -297100,7 +297104,7 @@ euk
 euk
 icp
 pFN
-icp
+crl
 icp
 icp
 icp
@@ -297552,7 +297556,7 @@ euk
 euk
 euk
 icp
-icp
+iUj
 icp
 icp
 icp

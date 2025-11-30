@@ -54,16 +54,16 @@
 /datum/intent/sword/peel
 	name = "armor peel"
 	icon_state = "inpeel"
-	attack_verb = list("peels", "tears")
+	attack_verb = list("<font color ='#e7e7e7'>peels</font>")
 	animname = "cut"
 	blade_class = BCLASS_PEEL
 	hitsound = list('sound/combat/hits/blunt/metalblunt (1).ogg', 'sound/combat/hits/blunt/metalblunt (2).ogg', 'sound/combat/hits/blunt/metalblunt (3).ogg')
 	chargetime = 0
-	penfactor = 200
+	penfactor = BLUNT_DEFAULT_PENFACTOR
 	swingdelay = 0
 	damfactor = 0.05
 	item_d_type = "slash"
-	peel_divisor = 4
+	peel_divisor = 5
 
 /datum/intent/sword/peel/big
 	name = "big sword armor peel"
@@ -695,6 +695,18 @@
 				return list("shrink" = 0.6,"sx" = 3,"sy" = 4,"nx" = -1,"ny" = 4,"wx" = -8,"wy" = 3,"ex" = 7,"ey" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0,"nturn" = 0,"sturn" = 0,"wturn" = 0,"eturn" = 15,"nflip" = 8,"sflip" = 0,"wflip" = 8,"eflip" = 0)
 			if("onbelt")
 				return list("shrink" = 0.5,"sx" = -4,"sy" = -6,"nx" = 5,"ny" = -6,"wx" = 0,"wy" = -6,"ex" = -1,"ey" = -6,"nturn" = 100,"sturn" = 156,"wturn" = 90,"eturn" = 180,"nflip" = 0,"sflip" = 0,"wflip" = 0,"eflip" = 0,"northabove" = 0,"southabove" = 1,"eastabove" = 1,"westabove" = 0)
+
+/obj/item/rogueweapon/sword/long/judgement/vlord/Initialize()
+	. = ..()
+	SEND_GLOBAL_SIGNAL(COMSIG_NEW_ICHOR_FANG_SPAWNED, src)
+	RegisterSignal(SSdcs, COMSIG_NEW_ICHOR_FANG_SPAWNED, PROC_REF(on_recall))
+
+/obj/item/rogueweapon/sword/long/judgement/vlord/proc/on_recall(obj/new_sword)
+	if(new_sword == src)
+		return
+
+	src.visible_message(span_warning("\The [src] crumbles to dust, the ashes spiriting away."))
+	qdel(src)
 
 /obj/item/rogueweapon/sword/long/marlin
 	name = "shalal saber"

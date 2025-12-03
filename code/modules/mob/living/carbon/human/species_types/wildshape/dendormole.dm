@@ -5,6 +5,8 @@
 	ambushable = FALSE
 	skin_armor = new /obj/item/clothing/suit/roguetown/armor/skin_armor/moss_skin
 
+/mob/living/carbon/human/species/wildshape/dendormole/death(gibbed, nocutscene = FALSE)
+	wildshape_untransform(TRUE, gibbed)
 
 //BUCKLING
 /mob/living/carbon/human/species/wildshape/dendormole/buckle_mob(mob/living/target, force = TRUE, check_loc = TRUE, lying_buckle = FALSE, hands_needed = 0, target_hands_needed = 0)
@@ -26,7 +28,7 @@
 		src.STASPD = 13
 
 		AddSpell(new /obj/effect/proc_holder/spell/self/moleclaw)
-		real_name = "Moss Crawler ([stored_mob.real_name])" //So we don't get a random name
+		// Set name once on transformation, not every time
 
 
 // dendormole SPECIES DATUM //

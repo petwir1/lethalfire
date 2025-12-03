@@ -1,3 +1,6 @@
+// Shapeshift spells - transforms into simple_animal mobs using shapeshift_holder system
+// Now extends from unified transformation base
+
 /obj/effect/proc_holder/spell/targeted/shapeshift
 	name = "Shapechange"
 	desc = ""
@@ -10,6 +13,8 @@
 	invocation = "RAC'WA NO!"
 	invocation_type = "shout"
 	action_icon_state = "shapeshift"
+	
+	// Legacy vars kept for compatibility
 	var/do_gibs = TRUE
 	var/show_true_name = TRUE
 
@@ -33,7 +38,8 @@
 		/mob/living/simple_animal/hostile/retaliate/rogue/mole,
 		/mob/living/simple_animal/hostile/retaliate/rogue/saiga
 	)
-/obj/effect/proc_holder/spell/targeted/shapeshift/cast(list/targets,mob/user = usr)
+
+/obj/effect/proc_holder/spell/targeted/shapeshift/cast(list/targets, mob/user = usr)
 	. = ..()
 	var/datum/antagonist/vampire/VD = usr?.mind?.has_antag_datum(/datum/antagonist/vampire)
 	if(VD && SEND_SIGNAL(user, COMSIG_DISGUISE_STATUS))
@@ -46,7 +52,8 @@
 		user.mob_spell_list.Remove(src)
 		user.mind.AddSpell(src)
 	if(user.buckled)
-		user.buckled.unbuckle_mob(src,force=TRUE)
+		user.buckled.unbuckle_mob(src, force = TRUE)
+	
 	for(var/mob/living/M in targets)
 		if(!shapeshift_type)
 			var/list/animal_list = list()
@@ -68,7 +75,7 @@
 					Restore(M)
 			Shapeshift(M)
 			return TRUE
-	return 
+	return
 
 /obj/effect/proc_holder/spell/targeted/shapeshift/proc/Shapeshift(mob/living/caster)
 	var/obj/shapeshift_holder/H = locate() in caster
@@ -84,18 +91,17 @@
 	the_evidence.base_diff = 6 // very noticable
 
 	var/mob/living/shape = new shapeshift_type(caster.loc)
-	if (shifted_speed_increase && shifted_speed_increase != 1)
-		shape.add_movespeed_modifier(type, update=TRUE, priority=100, multiplicative_slowdown=-shifted_speed_increase)
+	if(shifted_speed_increase && shifted_speed_increase != 1)
+		shape.add_movespeed_modifier(type, update = TRUE, priority = 100, multiplicative_slowdown = -shifted_speed_increase)
 
-
-	H = new(shape,src,caster)
-	if (show_true_name)
+	H = new(shape, src, caster)
+	if(show_true_name)
 		shape.name = "[shape] ([caster.real_name])"
 
 	clothes_req = FALSE
 	human_req = FALSE
 
-	if (do_gibs)
+	if(do_gibs)
 		playsound(caster.loc, pick('sound/combat/gib (1).ogg','sound/combat/gib (2).ogg'), 200, FALSE, 3)
 		caster.spawn_gibs(FALSE)
 

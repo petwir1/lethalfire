@@ -5,6 +5,9 @@
 	ambushable = FALSE
 	skin_armor = new /obj/item/clothing/suit/roguetown/armor/skin_armor/moss_skin
 
+/mob/living/carbon/human/species/wildshape/mirecrawler/death(gibbed, nocutscene = FALSE)
+	wildshape_untransform(TRUE, gibbed)
+
 /mob/living/carbon/human/species/wildshape/mirecrawler/gain_inherent_skills()
 	. = ..()
 	if(src.mind)
@@ -22,7 +25,7 @@
 		src.STASPD = 15
 
 		AddSpell(new /obj/effect/proc_holder/spell/self/moleclaw)
-		real_name = "Moss Crawler ([stored_mob.real_name])" //So we don't get a random name
+		// Set name once on transformation, not every time
 
 
 // mirecrawler SPECIES DATUM //

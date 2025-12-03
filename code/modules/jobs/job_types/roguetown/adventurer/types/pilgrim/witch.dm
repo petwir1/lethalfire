@@ -116,34 +116,47 @@
 			H.cmode_music = 'sound/music/combat_cult.ogg'
 			ADD_TRAIT(H, TRAIT_HERESIARCH, TRAIT_GENERIC)
 
-/obj/effect/proc_holder/spell/targeted/shapeshift/crow/witch
+// Witch transformation spells - have do_after on both transform and revert, plus 1 minute cooldown
+/obj/effect/proc_holder/spell/targeted/shapeshift/witch
+	invocation = ""
+	gesture_required = TRUE
+	chargetime = 5 SECONDS  // Do-after for transforming
+	recharge_time = 1 MINUTES  // 1 minute cooldown
+	cooldown_min = 1 MINUTES
 	knockout_on_death = 15 SECONDS
-	shifted_speed_increase = 1.15
-	show_true_name = FALSE
 	die_with_shapeshifted_form = FALSE
+	show_true_name = FALSE
+	convert_damage = FALSE
+	do_gibs = FALSE
+
+/obj/effect/proc_holder/spell/targeted/shapeshift/witch/Shapeshift(mob/living/caster)
+	// Do-after handled by chargetime
+	return ..()
+
+/obj/effect/proc_holder/spell/targeted/shapeshift/witch/Restore(mob/living/shape)
+	// Add do-after for witches when reverting
+	if(!do_after(shape, 5 SECONDS, target = shape))
+		to_chat(shape, span_warning("Transformation revert interrupted!"))
+		return
+	
+	return ..()
+
+/obj/effect/proc_holder/spell/targeted/shapeshift/crow/witch
+	overlay_state = "zad"
+	shifted_speed_increase = 1.15
+	shapeshift_type = /mob/living/simple_animal/hostile/retaliate/bat/crow
 
 /obj/effect/proc_holder/spell/targeted/shapeshift/bat/witch
 	overlay_state = "bat_transform"
-	knockout_on_death = 15 SECONDS
 	shifted_speed_increase = 1.15
-	show_true_name = FALSE
-	die_with_shapeshifted_form = FALSE
+	shapeshift_type = /mob/living/simple_animal/hostile/retaliate/bat
 
 /obj/effect/proc_holder/spell/targeted/shapeshift/cat
 	name = "Cat Form"
 	desc = ""
-	invocation = ""
 	overlay_state = "cat_transform"
-	gesture_required = TRUE
-	chargetime = 5 SECONDS
-	recharge_time = 50
-	cooldown_min = 50
-	die_with_shapeshifted_form = FALSE
-	shapeshift_type = /mob/living/simple_animal/pet/cat/witch_shifted
-	convert_damage = FALSE
-	do_gibs = FALSE
 	shifted_speed_increase = 1.35
-	show_true_name = FALSE
+	shapeshift_type = /mob/living/simple_animal/pet/cat/witch_shifted
 
 /obj/effect/proc_holder/spell/targeted/shapeshift/cat/black
 	shapeshift_type = /mob/living/simple_animal/pet/cat/rogue/black/witch_shifted
@@ -151,18 +164,9 @@
 /obj/effect/proc_holder/spell/targeted/shapeshift/lesser_wolf
 	name = "Lesser Volf Form"
 	desc = ""
-	invocation = ""
 	overlay_state = "volf_transform"
-	gesture_required = TRUE
-	chargetime = 5 SECONDS
-	recharge_time = 50
-	cooldown_min = 50
-	die_with_shapeshifted_form = FALSE
-	shapeshift_type = /mob/living/simple_animal/hostile/retaliate/rogue/wolf/witch_shifted
-	convert_damage = FALSE
-	do_gibs = FALSE
 	shifted_speed_increase = 1.35
-	show_true_name = FALSE
+	shapeshift_type = /mob/living/simple_animal/hostile/retaliate/rogue/wolf/witch_shifted
 
 /mob/living/simple_animal/hostile/retaliate/rogue/wolf/witch_shifted
 	name = "lesser volf"

@@ -34,11 +34,9 @@
 	W.stored_skills = ensure_skills().known_skills.Copy()
 	W.stored_experience = ensure_skills().skill_experience.Copy()
 
-	// Store spell list using new system if enabled
-	if(mind && mind.can_store_spells)
-		mind.stored_transformation_spells = mind.store_spell_list()
-	else
-		W.stored_spells = mind.spell_list.Copy() // Fallback for non-storage-enabled minds
+	// Transfer all spells to wildshape form - they keep the exact same spells
+	// The mind.transfer_to() below will carry the spell_list to the new form
+	// We don't need to store/restore anything since they keep the same spells
 
 	W.voice_color = voice_color
 	W.cmode_music_override = cmode_music_override
@@ -84,25 +82,9 @@
 	skills?.known_skills = WA.stored_skills.Copy()
 	skills?.skill_experience = WA.stored_experience.Copy()
 
-	// Restore spells using new system if storage was enabled
-	if(W.mind && W.mind.can_store_spells && W.mind.stored_transformation_spells)
-		// Remove T2 miracles granted during wildshape, keep transformation spells
-		var/list/always_keep = list(
-			/obj/effect/proc_holder/spell/targeted/wildshape
-		)
-		W.mind.restore_spell_list(W.mind.stored_transformation_spells, always_keep)
-		W.mind.stored_transformation_spells = null
-	else
-		// Fallback: old buggy logic for non-storage-enabled minds
-		// Remove spells that weren't in the original list
-		for(var/obj/effect/proc_holder/spell/wildspell in W.mind.spell_list)
-			var/found = FALSE
-			for(var/obj/effect/proc_holder/spell/originspell in WA.stored_spells)
-				if(wildspell == originspell)
-					found = TRUE
-					break
-			if(!found)
-				W.mind.RemoveSpell(wildspell)
+	// Druids keep the exact same spells - they're already in spell_list
+	// The mind.transfer_to() above already carried all spells back
+	// No need to restore or remove anything
 
 	W.regenerate_icons()
 

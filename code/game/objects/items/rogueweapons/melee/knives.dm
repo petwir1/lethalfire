@@ -903,7 +903,10 @@
 					if(prob(50 - (skill_level * 10))) // 50% base to fail -----> -10% at Legendary
 						results[ingredient] = 0
 					else
-						results[ingredient] = max(1, results[ingredient] * skill_bonuses[skill_level]) // Refer to skill_bonuses (You're guaranteed to get ATLEAST 1)
+						if(skill_level > SKILL_LEVEL_JOURNEYMAN) // Better than journeyman? You'll always get ATLEAST one back.
+							results[ingredient] = max(1, results[ingredient] * skill_bonuses[skill_level]) // Refer to skill_bonuses (You're guaranteed to get ATLEAST 1)
+						else
+							results[ingredient] *= skill_bonuses[skill_level]
 						results[ingredient] = round(results[ingredient])
 					if(results[ingredient] > 0) // whole numbers only homie!
 						for(var/i = 0; i < results[ingredient]; i++)
